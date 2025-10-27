@@ -6,7 +6,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <unistd.h>
-#include <ctype.h>  // For isdigit()
+#include <ctype.h>
 
 float calc(float a, char o, float b);
 void parse_expression(char *buffer, float *a, char *op, float *b);
@@ -77,21 +77,28 @@ int main() {
     return 0;
 }
 
-// Function to parse the expression in the format "a op b" from the string
 void parse_expression(char *buffer, float *a, char *op, float *b) {
-    char *token;
-    token = strtok(buffer, "+-*/");  // Extract the first number
-    if (token != NULL) {
-        *a = atof(token);
-    }
+    // Using a loop to find the operator and split the string
+    char *operator_pos = strpbrk(buffer, "+-*/");  // Locate the operator
 
-    *op = buffer[strlen(token)];  // The operator will be the next character
+    if (operator_pos != NULL) {
+        // The operator is now identified
+        *op = *operator_pos;
 
-    token = strtok(NULL, "+-*/");  // Extract the second number
-    if (token != NULL) {
-        *b = atof(token);
+        // Terminate the operator part to isolate the first operand
+        *operator_pos = '\0';  // Replace operator with null terminator
+
+        // Convert the left operand (before the operator)
+        *a = atof(buffer);
+
+        // Now parse the right operand (after the operator)
+        *b = atof(operator_pos + 1);  // Skip past the operator to get the second number
+    } else {
+        printf("Error: Invalid expression format\n");
+        exit(1);
     }
 }
+
 
 // Function to perform calculation based on the operator
 float calc(float a, char o, float b) {
@@ -107,12 +114,10 @@ float calc(float a, char o, float b) {
                 return a / b;
             } else {
                 printf("Error: Division by zero!\n");
-                return -1;  // Return an error value
+                return -1;
             }
         default:
             printf("Invalid operator!\n");
-            return -1;  // Return an error value for invalid operator
+            return -1;
     }
 }
-
-
