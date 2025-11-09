@@ -92,7 +92,7 @@ void parse_expression(char *buffer, float *a, char *op, float *b) {
         *a = atof(buffer);
 
         // Now parse the right operand (after the operator)
-        *b = atof(operator_pos + 1);  // Skip past the operator to get the second number
+        *b = atof(operator_pos + 1);
     } else {
         printf("Error: Invalid expression format\n");
         exit(1);
