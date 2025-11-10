@@ -32,14 +32,14 @@ int main() {
 	}
 	// Server listen with infinite loop
 	while (1){
-		int len, n;
-		len = sizeof(cliaddr); //len is value/resuslt
+		int n;
+		socklen_t len = sizeof(cliaddr); //len is value/resuslt
 		bzero(buffer, MAXLINE);
-		n = recvfrom(sockfd, (char *)buffer, MAXLINE, MSG_WAITALL, (struct sockaddr *) &cliaddr, (socklen_t*) &len);
+		n = recvfrom(sockfd, (char *)buffer, MAXLINE, MSG_WAITALL, (struct sockaddr *) &cliaddr, &len);
 		buffer [n] = '\0';
 		printf("Client: %s\n", buffer);
 		fgets(hello, MAXLINE, stdin);
-		sendto (sockfd, (const char *) hello, strlen (hello), MSG_CONFIRM, (const struct sockaddr *) &cliaddr, len);
+    sendto(sockfd, (const char *)hello, strlen(hello), 0, (const struct sockaddr *)&cliaddr, len);
 		bzero(buffer, MAXLINE);
 		//printf("Hello message sent.\n");
 	}

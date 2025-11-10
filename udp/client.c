@@ -23,15 +23,16 @@ int main() {
 	// Filling server information
 	servaddr.sin_family = AF_INET;
 	servaddr.sin_port = htons (PORT);
-	servaddr.sin_addr.s_addr = INADDR_ANY;
+	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 	// cotinuous loop
 	 while (1) {
-		 int n, len;
+		 int n;
+		 socklen_t len = sizeof(servaddr);
 		 bzero(buffer, MAXLINE);
 		 fgets (hello, MAXLINE, stdin);
-		 sendto (sockfd, (const char *) hello, strlen (hello), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof (servaddr));
+		 sendto (sockfd, (const char *) hello, strlen (hello),0, (const struct sockaddr *) &servaddr, sizeof (servaddr));
 		 //printf("Hello message sent.\n");
-		 n = recvfrom (sockfd, (char *) buffer, MAXLINE, MSG_WAITALL, (struct sockaddr *) &servaddr, (socklen_t*) &len);
+		 n = recvfrom (sockfd, (char *) buffer, MAXLINE, MSG_WAITALL, (struct sockaddr *) &servaddr, &len);
 		 buffer[n] = '\0';
 		 printf("Server: %s\n", buffer);
 		 bzero(buffer, MAXLINE);
